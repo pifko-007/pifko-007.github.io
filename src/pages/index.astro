@@ -1,0 +1,63 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Card from '../components/Card.astro';
+import { getCollection } from 'astro:content';
+
+const countries = await getCollection('countries');
+const organizations = await getCollection('organizations');
+---
+
+<BaseLayout title="Baza wiedzy geopolitycznej">
+  <div style="padding-top: 56px;">
+    <div class="hero">
+      <div class="hero-label">// baza wiedzy geopolitycznej</div>
+      <h1>Geopolityka w jednym miejscu</h1>
+      <p>Usystematyzowane informacje o państwach i organizacjach międzynarodowych. Sojusze, konflikty, pozycje strategiczne.</p>
+    </div>
+
+    <div class="stats-bar">
+      <div class="stat">
+        <div class="stat-number">{countries.length}</div>
+        <div class="stat-label">Państwa</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">{organizations.length}</div>
+        <div class="stat-label">Organizacje</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">—</div>
+        <div class="stat-label">Ostatnia aktualizacja</div>
+      </div>
+    </div>
+
+    <div class="cards-section">
+      <div class="section-title">Państwa</div>
+      <div class="cards-grid">
+        {countries.map(c => (
+          <Card
+            type="country"
+            href={`/countries/${c.slug}`}
+            flag={c.data.flag}
+            name={c.data.name}
+            meta={`${c.data.region} · ${c.data.capital}`}
+            tags={c.data.tags}
+          />
+        ))}
+      </div>
+
+      <div class="section-title">Organizacje Międzynarodowe</div>
+      <div class="cards-grid">
+        {organizations.map(o => (
+          <Card
+            type="org"
+            href={`/organizations/${o.slug}`}
+            flag={o.data.flag}
+            name={o.data.name}
+            meta={`${o.data.type} · ${o.data.members}`}
+            tags={o.data.tags}
+          />
+        ))}
+      </div>
+    </div>
+  </div>
+</BaseLayout>

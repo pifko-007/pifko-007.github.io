@@ -1,0 +1,55 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import SectionNav from '../components/SectionNav.astro';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  entry: CollectionEntry<'countries'>;
+  headings: { depth: number; slug: string; text: string }[];
+}
+
+const { entry, headings } = Astro.props;
+const { name, flag, capital, region, government, population, tags } = entry.data;
+const h2s = headings.filter(h => h.depth === 2);
+---
+
+<BaseLayout title={name}>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="sidebar-header">{name}</div>
+      <nav class="sidebar-nav">
+        {h2s.map((h, i) => (
+          <a href={`#${h.slug}`} class={i === 0 ? 'active' : ''}>
+            <span class="section-dot"></span>{h.text}
+          </a>
+        ))}
+      </nav>
+    </aside>
+
+    <main class="content">
+      <a class="back-btn" href="/">← Powrót do listy</a>
+
+      <div class="page-header">
+        <div class="breadcrumb">
+          <a href="/">GeoAtlas</a> / <a href="/">Państwa</a> / {name}
+        </div>
+        <h1>{flag} {name}</h1>
+        <div class="page-header-meta">
+          <div class="meta-item"><span>Stolica:</span><strong>{capital}</strong></div>
+          <div class="meta-item"><span>Region:</span><strong>{region}</strong></div>
+          <div class="meta-item"><span>Ustrój:</span><strong>{government}</strong></div>
+          <div class="meta-item"><span>Populacja:</span><strong>{population}</strong></div>
+          <div class="card-tags">
+            {tags.map(tag => <span class="tag country">{tag}</span>)}
+          </div>
+        </div>
+      </div>
+
+      <SectionNav headings={headings} />
+
+      <div class="entry-content entry-section-end">
+        <slot />
+      </div>
+    </main>
+  </div>
+</BaseLayout>

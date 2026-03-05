@@ -1,0 +1,23 @@
+---
+interface Props {
+  type: 'country' | 'org';
+  href: string;
+  flag: string;
+  name: string;
+  meta: string;
+  tags: string[];
+}
+
+const { type, href, flag, name, meta, tags } = Astro.props;
+const typeLabel = type === 'country' ? '// Państwo' : '// Organizacja';
+---
+
+<a class="card" href={href}>
+  <div class={`card-type ${type}`}>{typeLabel}</div>
+  <h3>{flag} {name}</h3>
+  <div class="card-meta">{meta}</div>
+  <div class="card-tags">
+    {tags.map(tag => <span class={`tag ${type}`}>{tag}</span>)}
+  </div>
+  <span class="card-arrow">↗</span>
+</a>

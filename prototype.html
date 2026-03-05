@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GeoAtlas — Baza wiedzy geopolitycznej</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0c10;
+    --surface: #111318;
+    --surface2: #181c24;
+    --border: #1e2330;
+    --accent: #c8a96e;
+    --accent2: #4a7fa5;
+    --text: #d4d8e2;
+    --text-muted: #6b7280;
+    --text-dim: #9ca3af;
+    --country-tag: #1a2a1a;
+    --country-accent: #4a8c5c;
+    --org-tag: #1a1a2e;
+    --org-accent: #4a5a9c;
+  }
+
+- { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+background: var(–bg);
+color: var(–text);
+font-family: ‘IBM Plex Sans’, sans-serif;
+font-weight: 300;
+line-height: 1.7;
+overflow-x: hidden;
+}
+
+/* GRAIN OVERLAY */
+body::before {
+content: ‘’;
+position: fixed;
+inset: 0;
+background-image: url(“data:image/svg+xml,%3Csvg viewBox=‘0 0 256 256’ xmlns=‘http://www.w3.org/2000/svg’%3E%3Cfilter id=‘noise’%3E%3CfeTurbulence type=‘fractalNoise’ baseFrequency=‘0.9’ numOctaves=‘4’ stitchTiles=‘stitch’/%3E%3C/filter%3E%3Crect width=‘100%25’ height=‘100%25’ filter=‘url(%23noise)’ opacity=‘0.04’/%3E%3C/svg%3E”);
+pointer-events: none;
+z-index: 9999;
+opacity: 0.4;
+}
+
+/* ── GLOBAL NAV ─────────────────────────────── */
+.global-nav {
+position: fixed;
+top: 0; left: 0; right: 0;
+z-index: 100;
+background: rgba(10, 12, 16, 0.92);
+backdrop-filter: blur(12px);
+border-bottom: 1px solid var(–border);
+display: flex;
+align-items: center;
+gap: 0;
+height: 56px;
+}
+
+.nav-brand {
+padding: 0 28px;
+font-family: ‘Playfair Display’, serif;
+font-size: 1.1rem;
+font-weight: 700;
+color: var(–accent);
+letter-spacing: 0.05em;
+border-right: 1px solid var(–border);
+height: 100%;
+display: flex;
+align-items: center;
+white-space: nowrap;
+text-decoration: none;
+cursor: pointer;
+}
+
+.nav-brand span {
+color: var(–text-muted);
+font-weight: 400;
+font-size: 0.8rem;
+margin-left: 8px;
+font-family: ‘IBM Plex Mono’, monospace;
+}
+
+.nav-sections {
+display: flex;
+height: 100%;
+flex: 1;
+}
+
+.nav-group {
+position: relative;
+height: 100%;
+}
+
+.nav-group-btn {
+height: 100%;
+padding: 0 20px;
+background: none;
+border: none;
+border-right: 1px solid var(–border);
+color: var(–text-dim);
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 0.72rem;
+letter-spacing: 0.12em;
+text-transform: uppercase;
+cursor: pointer;
+display: flex;
+align-items: center;
+gap: 8px;
+transition: color 0.2s, background 0.2s;
+}
+
+.nav-group-btn:hover, .nav-group-btn.active {
+color: var(–accent);
+background: rgba(200, 169, 110, 0.05);
+}
+
+.nav-group-btn .arrow {
+font-size: 0.6rem;
+transition: transform 0.2s;
+}
+
+.nav-group-btn.open .arrow { transform: rotate(180deg); }
+
+.nav-dropdown {
+display: none;
+position: absolute;
+top: 56px; left: 0;
+min-width: 200px;
+background: var(–surface);
+border: 1px solid var(–border);
+border-top: none;
+}
+
+.nav-dropdown.open { display: block; }
+
+.nav-dropdown a {
+display: block;
+padding: 10px 18px;
+color: var(–text-dim);
+text-decoration: none;
+font-family: ‘IBM Plex Sans’, sans-serif;
+font-size: 0.85rem;
+border-bottom: 1px solid var(–border);
+transition: color 0.15s, background 0.15s;
+}
+
+.nav-dropdown a:last-child { border-bottom: none; }
+.nav-dropdown a:hover { color: var(–accent); background: rgba(200,169,110,0.05); }
+
+/* ── MAIN LAYOUT ─────────────────────────────── */
+.app {
+display: flex;
+min-height: 100vh;
+padding-top: 56px;
+}
+
+/* ── SIDEBAR ─────────────────────────────────── */
+.sidebar {
+width: 260px;
+min-width: 260px;
+background: var(–surface);
+border-right: 1px solid var(–border);
+position: sticky;
+top: 56px;
+height: calc(100vh - 56px);
+overflow-y: auto;
+display: none;
+flex-direction: column;
+}
+
+.sidebar.visible { display: flex; }
+
+.sidebar-header {
+padding: 20px 20px 12px;
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 0.65rem;
+letter-spacing: 0.18em;
+text-transform: uppercase;
+color: var(–text-muted);
+border-bottom: 1px solid var(–border);
+}
+
+.sidebar-nav a {
+display: flex;
+align-items: center;
+gap: 10px;
+padding: 11px 20px;
+color: var(–text-dim);
+text-decoration: none;
+font-size: 0.85rem;
+border-bottom: 1px solid rgba(30,35,48,0.5);
+transition: all 0.15s;
+}
+
+.sidebar-nav a:hover { color: var(–text); background: rgba(255,255,255,0.03); }
+
+.sidebar-nav a.active {
+color: var(–accent);
+background: rgba(200,169,110,0.07);
+border-left: 2px solid var(–accent);
+}
+
+.sidebar-nav .section-dot {
+width: 6px; height: 6px;
+border-radius: 50%;
+background: var(–border);
+flex-shrink: 0;
+}
+
+.sidebar-nav a.active .section-dot { background: var(–accent); }
+
+/* ── CONTENT ─────────────────────────────────── */
+.content {
+flex: 1;
+min-width: 0;
+}
+
+/* ── HOME ────────────────────────────────────── */
+.home-view { display: block; }
+.page-view { display: none; }
+
+.hero {
+padding: 80px 60px 60px;
+border-bottom: 1px solid var(–border);
+position: relative;
+overflow: hidden;
+}
+
+.hero::before {
+content: ‘GEO’;
+position: absolute;
+right: -20px; top: -40px;
+font-family: ‘Playfair Display’, serif;
+font-size: 18rem;
+font-weight: 900;
+color: rgba(200,169,110,0.03);
+pointer-events: none;
+line-height: 1;
+}
+
+.hero-label {
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 0.65rem;
+letter-spacing: 0.25em;
+text-transform: uppercase;
+color: var(–accent);
+margin-bottom: 20px;
+}
+
+.hero h1 {
+font-family: ‘Playfair Display’, serif;
+font-size: 3.2rem;
+font-weight: 900;
+line-height: 1.1;
+color: #fff;
+margin-bottom: 20px;
+max-width: 600px;
+}
+
+.hero p {
+color: var(–text-muted);
+max-width: 520px;
+font-size: 0.95rem;
+}
+
+.stats-bar {
+display: flex;
+gap: 0;
+border-top: 1px solid var(–border);
+}
+
+.stat {
+padding: 24px 40px;
+border-right: 1px solid var(–border);
+}
+
+.stat-number {
+font-family: ‘Playfair Display’, serif;
+font-size: 2rem;
+font-weight: 700;
+color: var(–accent);
+}
+
+.stat-label {
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 0.65rem;
+letter-spacing: 0.15em;
+text-transform: uppercase;
+color: var(–text-muted);
+margin-top: 2px;
+}
+
+.cards-section {
+padding: 48px 60px;
+}
+
+.section-title {
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 0.65rem;
+letter-spacing: 0.2em;
+text-transform: uppercase;
+color: var(–text-muted);
+margin-bottom: 24px;
+display: flex;
+align-items: center;
+gap: 12px;
+}
+
+.section-title::after {
+content: ‘’;
+flex: 1;
+height: 1px;
+background: var(–border);
+}
+
+.cards-grid {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+gap: 1px;
+background: var(–border);
+border: 1px solid var(–border);
+margin-bottom: 48px;
+}
+
+.card {
+background: var(–surface);
+padding: 24px;
+cursor: pointer;
+transition: background 0.2s;
+position: relative;
+overflow: hidden;
+}
+
+.card:hover { background: var(–surface2); }
+
+.card-type {
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 0.6rem;
+letter-spacing: 0.2em;
+text-transform: uppercase;
+margin-bottom: 12px;
+}
+
+.card-type.country { color: var(–country-accent); }
+.card-type.org { color: var(–org-accent); }
+
+.card h3 {
+font-family: ‘Playfair Display’, serif;
+font-size: 1.3rem;
+font-weight: 700;
+color: #fff;
+margin-bottom: 8px;
+}
+
+.card-meta {
+font-size: 0.8rem;
+color: var(–text-muted);
+margin-bottom: 14px;
+}
+
+.card-tags {
+display: flex;
+flex-wrap: wrap;
+gap: 6px;
+}
+
+.tag {
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 0.6rem;
+padding: 3px 8px;
+letter-spacing: 0.1em;
+}
+
+.tag.country { background: var(–country-tag); color: var(–country-accent); }
+.tag.org { background: var(–org-tag); color: var(–org-accent); }
+
+.card-arrow {
+position: absolute;
+right: 20px; bottom: 20px;
+color: var(–border);
+font-size: 1.2rem;
+transition: color 0.2s, transform 0.2s;
+}
+
+.card:hover .card-arrow {
+color: var(–accent);
+transform: translate(2px, -2px);
+}
+
+/* ── PAGE VIEW ───────────────────────────────── */
+.page-header {
+padding: 48px 60px 36px;
+border-bottom: 1px solid var(–border);
+position: relative;
+}
+
+.breadcrumb {
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 0.65rem;
+letter-spacing: 0.15em;
+color: var(–text-muted);
+margin-bottom: 20px;
+display: flex;
+align-items: center;
+gap: 8px;
+}
+
+.breadcrumb a {
+color: var(–accent);
+text-decoration: none;
+}
+
+.breadcrumb a:hover { text-decoration: underline; }
+
+.page-header h1 {
+font-family: ‘Playfair Display’, serif;
+font-size: 2.8rem;
+font-weight: 900;
+color: #fff;
+margin-bottom: 12px;
+}
+
+.page-header-meta {
+display: flex;
+gap: 20px;
+flex-wrap: wrap;
+align-items: center;
+}
+
+.meta-item {
+font-size: 0.82rem;
+color: var(–text-dim);
+display: flex;
+align-items: center;
+gap: 6px;
+}
+
+.meta-item strong {
+color: var(–text);
+font-weight: 500;
+}
+
+/* STICKY SECTION NAV */
+.section-nav {
+position: sticky;
+top: 56px;
+z-index: 50;
+background: rgba(10,12,16,0.95);
+backdrop-filter: blur(8px);
+border-bottom: 1px solid var(–border);
+display: flex;
+overflow-x: auto;
+gap: 0;
+}
+
+.section-nav a {
+padding: 14px 22px;
+color: var(–text-muted);
+text-decoration: none;
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 0.68rem;
+letter-spacing: 0.12em;
+text-transform: uppercase;
+border-right: 1px solid var(–border);
+white-space: nowrap;
+transition: color 0.2s, background 0.2s;
+}
+
+.section-nav a:hover { color: var(–accent); background: rgba(200,169,110,0.05); }
+.section-nav a.active { color: var(–accent); border-bottom: 2px solid var(–accent); }
+
+/* SECTIONS */
+.page-section {
+padding: 52px 60px;
+border-bottom: 1px solid var(–border);
+}
+
+.page-section h2 {
+font-family: ‘Playfair Display’, serif;
+font-size: 1.6rem;
+font-weight: 700;
+color: #fff;
+margin-bottom: 6px;
+}
+
+.section-subtitle {
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 0.65rem;
+letter-spacing: 0.15em;
+color: var(–text-muted);
+text-transform: uppercase;
+margin-bottom: 28px;
+padding-bottom: 16px;
+border-bottom: 1px solid var(–border);
+}
+
+.placeholder-block {
+background: var(–surface);
+border: 1px dashed var(–border);
+border-left: 3px solid var(–accent);
+padding: 20px 24px;
+margin-bottom: 16px;
+font-size: 0.85rem;
+}
+
+.placeholder-block .ph-label {
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 0.65rem;
+letter-spacing: 0.15em;
+text-transform: uppercase;
+color: var(–accent);
+margin-bottom: 8px;
+}
+
+.placeholder-block p {
+color: var(–text-muted);
+font-style: italic;
+font-size: 0.83rem;
+}
+
+.placeholder-grid {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 16px;
+}
+
+/* ── BACK BUTTON ─────────────────────────────── */
+.back-btn {
+display: inline-flex;
+align-items: center;
+gap: 8px;
+padding: 8px 16px;
+background: none;
+border: 1px solid var(–border);
+color: var(–text-muted);
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 0.68rem;
+letter-spacing: 0.1em;
+cursor: pointer;
+transition: all 0.2s;
+text-transform: uppercase;
+margin: 24px 60px;
+text-decoration: none;
+}
+
+.back-btn:hover { color: var(–accent); border-color: var(–accent); }
+
+/* ── SCROLLBAR ───────────────────────────────── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: var(–bg); }
+::-webkit-scrollbar-thumb { background: var(–border); }
+
+/* ── ANIMATIONS ──────────────────────────────── */
+@keyframes fadeUp {
+from { opacity: 0; transform: translateY(16px); }
+to   { opacity: 1; transform: translateY(0); }
+}
+
+.card { animation: fadeUp 0.4s ease both; }
+.card:nth-child(1) { animation-delay: 0.05s; }
+.card:nth-child(2) { animation-delay: 0.1s; }
+.card:nth-child(3) { animation-delay: 0.15s; }
+.card:nth-child(4) { animation-delay: 0.2s; }
+.card:nth-child(5) { animation-delay: 0.25s; }
+
+@media (max-width: 700px) {
+.hero { padding: 48px 24px 36px; }
+.hero h1 { font-size: 2rem; }
+.cards-section { padding: 32px 24px; }
+.page-header { padding: 32px 24px 24px; }
+.page-section { padding: 36px 24px; }
+.section-nav a { padding: 12px 14px; }
+.back-btn { margin: 16px 24px; }
+.placeholder-grid { grid-template-columns: 1fr; }
+.stat { padding: 16px 24px; }
+}
+</style>
+
+</head>
+<body>
+
+<!-- GLOBAL NAV -->
+
+<nav class="global-nav">
+  <a class="nav-brand" onclick="showHome()">GeoAtlas <span>v0.1</span></a>
+  <div class="nav-sections">
+    <div class="nav-group">
+      <button class="nav-group-btn" onclick="toggleDropdown('dd-countries', this)">
+        Państwa <span class="arrow">▾</span>
+      </button>
+      <div class="nav-dropdown" id="dd-countries">
+        <a onclick="showPage('poland')">🇵🇱 Polska</a>
+        <a onclick="showPage('germany')">🇩🇪 Niemcy</a>
+        <a onclick="showPage('russia')">🇷🇺 Rosja</a>
+        <a onclick="showPage('usa')">🇺🇸 Stany Zjednoczone</a>
+      </div>
+    </div>
+    <div class="nav-group">
+      <button class="nav-group-btn" onclick="toggleDropdown('dd-orgs', this)">
+        Organizacje <span class="arrow">▾</span>
+      </button>
+      <div class="nav-dropdown" id="dd-orgs">
+        <a onclick="showPage('nato')">🔷 NATO</a>
+        <a onclick="showPage('eu')">🔵 Unia Europejska</a>
+        <a onclick="showPage('un')">🌐 ONZ</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- APP WRAPPER -->
+
+<div class="app">
+
+  <!-- SIDEBAR (visible on page view) -->
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header" id="sidebar-title">Sekcje</div>
+    <nav class="sidebar-nav" id="sidebar-nav"></nav>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+
+  <main class="content">
+
+```
+<!-- HOME VIEW -->
+<div class="home-view" id="home-view">
+  <div class="hero">
+    <div class="hero-label">// baza wiedzy geopolitycznej</div>
+    <h1>Geopolityka w jednym miejscu</h1>
+    <p>Usystematyzowane informacje o państwach i organizacjach międzynarodowych. Sojusze, konflikty, pozycje strategiczne.</p>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat">
+      <div class="stat-number">4</div>
+      <div class="stat-label">Państwa</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number">3</div>
+      <div class="stat-label">Organizacje</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number">—</div>
+      <div class="stat-label">Ostatnia aktualizacja</div>
+    </div>
+  </div>
+
+  <div class="cards-section">
+    <div class="section-title">Państwa</div>
+    <div class="cards-grid">
+      <div class="card" onclick="showPage('poland')">
+        <div class="card-type country">// Państwo</div>
+        <h3>🇵🇱 Polska</h3>
+        <div class="card-meta">Europa Środkowa · Warszawa</div>
+        <div class="card-tags">
+          <span class="tag country">NATO</span>
+          <span class="tag country">EU</span>
+          <span class="tag country">Flanka wschodnia</span>
+        </div>
+        <span class="card-arrow">↗</span>
+      </div>
+      <div class="card" onclick="showPage('germany')">
+        <div class="card-type country">// Państwo</div>
+        <h3>🇩🇪 Niemcy</h3>
+        <div class="card-meta">Europa Zachodnia · Berlin</div>
+        <div class="card-tags">
+          <span class="tag country">NATO</span>
+          <span class="tag country">EU</span>
+          <span class="tag country">G7</span>
+        </div>
+        <span class="card-arrow">↗</span>
+      </div>
+      <div class="card" onclick="showPage('russia')">
+        <div class="card-type country">// Państwo</div>
+        <h3>🇷🇺 Rosja</h3>
+        <div class="card-meta">Europa Wschodnia / Azja · Moskwa</div>
+        <div class="card-tags">
+          <span class="tag country">P5 ONZ</span>
+          <span class="tag country">BRICS</span>
+          <span class="tag country">SCO</span>
+        </div>
+        <span class="card-arrow">↗</span>
+      </div>
+      <div class="card" onclick="showPage('usa')">
+        <div class="card-type country">// Państwo</div>
+        <h3>🇺🇸 Stany Zjednoczone</h3>
+        <div class="card-meta">Ameryka Północna · Waszyngton D.C.</div>
+        <div class="card-tags">
+          <span class="tag country">NATO</span>
+          <span class="tag country">G7</span>
+          <span class="tag country">P5 ONZ</span>
+        </div>
+        <span class="card-arrow">↗</span>
+      </div>
+    </div>
+
+    <div class="section-title">Organizacje Międzynarodowe</div>
+    <div class="cards-grid">
+      <div class="card" onclick="showPage('nato')">
+        <div class="card-type org">// Organizacja</div>
+        <h3>🔷 NATO</h3>
+        <div class="card-meta">Sojusz Wojskowy · 32 członków</div>
+        <div class="card-tags">
+          <span class="tag org">Militarna</span>
+          <span class="tag org">Kolektywna obrona</span>
+        </div>
+        <span class="card-arrow">↗</span>
+      </div>
+      <div class="card" onclick="showPage('eu')">
+        <div class="card-type org">// Organizacja</div>
+        <h3>🔵 Unia Europejska</h3>
+        <div class="card-meta">Unia Polityczno-Gospodarcza · 27 członków</div>
+        <div class="card-tags">
+          <span class="tag org">Gospodarcza</span>
+          <span class="tag org">Polityczna</span>
+        </div>
+        <span class="card-arrow">↗</span>
+      </div>
+      <div class="card" onclick="showPage('un')">
+        <div class="card-type org">// Organizacja</div>
+        <h3>🌐 ONZ</h3>
+        <div class="card-meta">Organizacja Międzynarodowa · 193 członków</div>
+        <div class="card-tags">
+          <span class="tag org">Globalna</span>
+          <span class="tag org">Bezpieczeństwo</span>
+        </div>
+        <span class="card-arrow">↗</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE VIEW -->
+<div class="page-view" id="page-view">
+  <a class="back-btn" onclick="showHome()">← Powrót do listy</a>
+  <div id="page-content"></div>
+</div>
+```
+
+  </main>
+</div>
+
+<script>
+// ── DATA ────────────────────────────────────────────────
+const pages = {
+  poland: {
+    type: 'country',
+    flag: '🇵🇱',
+    name: 'Polska',
+    meta: [
+      { label: 'Stolica', value: 'Warszawa' },
+      { label: 'Region', value: 'Europa Środkowa' },
+      { label: 'Ustrój', value: 'Republika parlamentarna' },
+      { label: 'Populacja', value: '37,6 mln' },
+    ],
+    tags: ['NATO', 'EU', 'V4', 'Flanka wschodnia'],
+    sections: [
+      { id: 'przeglad', label: 'Przegląd', ph: 'Krótkie streszczenie pozycji geopolitycznej państwa, kluczowe fakty strategiczne, rola na arenie międzynarodowej.' },
+      { id: 'podkategoria-a', label: 'Podkategoria A', ph: 'Treść podkategorii A — do zdefiniowania w kolejnym kroku.' },
+      { id: 'podkategoria-b', label: 'Podkategoria B', ph: 'Treść podkategorii B — do zdefiniowania w kolejnym kroku.' },
+      { id: 'podkategoria-c', label: 'Podkategoria C', ph: 'Treść podkategorii C — do zdefiniowania w kolejnym kroku.' },
+      { id: 'podkategoria-d', label: 'Podkategoria D', ph: 'Treść podkategorii D — do zdefiniowania w kolejnym kroku.' },
+    ]
+  },
+  germany: {
+    type: 'country', flag: '🇩🇪', name: 'Niemcy',
+    meta: [
+      { label: 'Stolica', value: 'Berlin' },
+      { label: 'Region', value: 'Europa Zachodnia' },
+      { label: 'Ustrój', value: 'Republika federalna' },
+      { label: 'Populacja', value: '84,4 mln' },
+    ],
+    tags: ['NATO', 'EU', 'G7', 'G20'],
+    sections: [
+      { id: 'przeglad', label: 'Przegląd', ph: 'Krótkie streszczenie pozycji geopolitycznej Niemiec.' },
+      { id: 'podkategoria-a', label: 'Podkategoria A', ph: 'Placeholder.' },
+      { id: 'podkategoria-b', label: 'Podkategoria B', ph: 'Placeholder.' },
+      { id: 'podkategoria-c', label: 'Podkategoria C', ph: 'Placeholder.' },
+      { id: 'podkategoria-d', label: 'Podkategoria D', ph: 'Placeholder.' },
+    ]
+  },
+  russia: {
+    type: 'country', flag: '🇷🇺', name: 'Rosja',
+    meta: [
+      { label: 'Stolica', value: 'Moskwa' },
+      { label: 'Region', value: 'Europa Wsch. / Azja' },
+      { label: 'Ustrój', value: 'Federacja prezydencka' },
+      { label: 'Populacja', value: '144 mln' },
+    ],
+    tags: ['P5 ONZ', 'BRICS', 'SCO', 'CSTO'],
+    sections: [
+      { id: 'przeglad', label: 'Przegląd', ph: 'Krótkie streszczenie pozycji geopolitycznej Rosji.' },
+      { id: 'podkategoria-a', label: 'Podkategoria A', ph: 'Placeholder.' },
+      { id: 'podkategoria-b', label: 'Podkategoria B', ph: 'Placeholder.' },
+      { id: 'podkategoria-c', label: 'Podkategoria C', ph: 'Placeholder.' },
+      { id: 'podkategoria-d', label: 'Podkategoria D', ph: 'Placeholder.' },
+    ]
+  },
+  usa: {
+    type: 'country', flag: '🇺🇸', name: 'Stany Zjednoczone',
+    meta: [
+      { label: 'Stolica', value: 'Waszyngton D.C.' },
+      { label: 'Region', value: 'Ameryka Północna' },
+      { label: 'Ustrój', value: 'Republika federalna' },
+      { label: 'Populacja', value: '335 mln' },
+    ],
+    tags: ['NATO', 'G7', 'P5 ONZ', 'AUKUS'],
+    sections: [
+      { id: 'przeglad', label: 'Przegląd', ph: 'Krótkie streszczenie pozycji geopolitycznej USA.' },
+      { id: 'podkategoria-a', label: 'Podkategoria A', ph: 'Placeholder.' },
+      { id: 'podkategoria-b', label: 'Podkategoria B', ph: 'Placeholder.' },
+      { id: 'podkategoria-c', label: 'Podkategoria C', ph: 'Placeholder.' },
+      { id: 'podkategoria-d', label: 'Podkategoria D', ph: 'Placeholder.' },
+    ]
+  },
+  nato: {
+    type: 'org', flag: '🔷', name: 'NATO',
+    meta: [
+      { label: 'Typ', value: 'Sojusz wojskowy' },
+      { label: 'Założona', value: '1949' },
+      { label: 'Siedziba', value: 'Bruksela' },
+      { label: 'Członkowie', value: '32 państwa' },
+    ],
+    tags: ['Militarna', 'Kolektywna obrona', 'Art. 5'],
+    sections: [
+      { id: 'przeglad', label: 'Przegląd', ph: 'Historia, cel i struktura organizacji.' },
+      { id: 'podkategoria-x', label: 'Podkategoria X', ph: 'Treść podkategorii X — specyficzna dla organizacji, do zdefiniowania.' },
+      { id: 'podkategoria-y', label: 'Podkategoria Y', ph: 'Treść podkategorii Y — do zdefiniowania.' },
+      { id: 'podkategoria-z', label: 'Podkategoria Z', ph: 'Treść podkategorii Z — do zdefiniowania.' },
+    ]
+  },
+  eu: {
+    type: 'org', flag: '🔵', name: 'Unia Europejska',
+    meta: [
+      { label: 'Typ', value: 'Unia polityczno-gospodarcza' },
+      { label: 'Założona', value: '1993 (Traktat z Maastricht)' },
+      { label: 'Siedziba', value: 'Bruksela' },
+      { label: 'Członkowie', value: '27 państw' },
+    ],
+    tags: ['Gospodarcza', 'Polityczna', 'Strefa Schengen'],
+    sections: [
+      { id: 'przeglad', label: 'Przegląd', ph: 'Historia, cel i struktura UE.' },
+      { id: 'podkategoria-x', label: 'Podkategoria X', ph: 'Placeholder.' },
+      { id: 'podkategoria-y', label: 'Podkategoria Y', ph: 'Placeholder.' },
+      { id: 'podkategoria-z', label: 'Podkategoria Z', ph: 'Placeholder.' },
+    ]
+  },
+  un: {
+    type: 'org', flag: '🌐', name: 'ONZ',
+    meta: [
+      { label: 'Typ', value: 'Organizacja międzyrządowa' },
+      { label: 'Założona', value: '1945' },
+      { label: 'Siedziba', value: 'Nowy Jork' },
+      { label: 'Członkowie', value: '193 państwa' },
+    ],
+    tags: ['Globalna', 'Bezpieczeństwo', 'Rada Bezpieczeństwa'],
+    sections: [
+      { id: 'przeglad', label: 'Przegląd', ph: 'Misja, struktura i rola ONZ na arenie globalnej.' },
+      { id: 'podkategoria-x', label: 'Podkategoria X', ph: 'Placeholder.' },
+      { id: 'podkategoria-y', label: 'Podkategoria Y', ph: 'Placeholder.' },
+      { id: 'podkategoria-z', label: 'Podkategoria Z', ph: 'Placeholder.' },
+    ]
+  }
+};
+
+// ── NAVIGATION ──────────────────────────────────────────
+function showHome() {
+  document.getElementById('home-view').style.display = 'block';
+  document.getElementById('page-view').style.display = 'none';
+  document.getElementById('sidebar').classList.remove('visible');
+  closeAllDropdowns();
+}
+
+function showPage(id) {
+  closeAllDropdowns();
+  const data = pages[id];
+  if (!data) return;
+
+  const isCountry = data.type === 'country';
+  const accentColor = isCountry ? 'var(--country-accent)' : 'var(--org-accent)';
+  const tagClass = isCountry ? 'country' : 'org';
+  const typeLabel = isCountry ? 'Państwo' : 'Organizacja Międzynarodowa';
+  const breadcrumb = isCountry ? 'Państwa' : 'Organizacje';
+
+  const metaHtml = data.meta.map(m =>
+    `<div class="meta-item"><span>${m.label}:</span><strong>${m.value}</strong></div>`
+  ).join('');
+
+  const tagsHtml = data.tags.map(t =>
+    `<span class="tag ${tagClass}">${t}</span>`
+  ).join('');
+
+  const sectionsHtml = data.sections.map(s => `
+    <div class="page-section" id="${s.id}">
+      <h2>${s.label}</h2>
+      <div class="section-subtitle">// ${s.id}</div>
+      <div class="placeholder-block">
+        <div class="ph-label">↳ Placeholder — do wypełnienia</div>
+        <p>${s.ph}</p>
+      </div>
+      ${s.id === 'przeglad' ? `
+      <div class="placeholder-grid">
+        <div class="placeholder-block">
+          <div class="ph-label">↳ Element A</div>
+          <p>Dodatkowy element sekcji przegląd, np. kluczowe wskaźniki, mapa sojuszy.</p>
+        </div>
+        <div class="placeholder-block">
+          <div class="ph-label">↳ Element B</div>
+          <p>Dodatkowy element sekcji przegląd, np. oś czasu, kluczowe daty.</p>
+        </div>
+      </div>` : ''}
+    </div>
+  `).join('');
+
+  const sectionNavHtml = data.sections.map((s, i) =>
+    `<a href="#${s.id}" class="${i===0?'active':''}">${s.label}</a>`
+  ).join('');
+
+  document.getElementById('page-content').innerHTML = `
+    <div class="page-header">
+      <div class="breadcrumb">
+        <a onclick="showHome()">GeoAtlas</a> / 
+        <a onclick="showHome()">${breadcrumb}</a> /
+        ${data.name}
+      </div>
+      <h1>${data.flag} ${data.name}</h1>
+      <div class="page-header-meta">
+        ${metaHtml}
+        <div class="card-tags">${tagsHtml}</div>
+      </div>
+    </div>
+    <nav class="section-nav">${sectionNavHtml}</nav>
+    ${sectionsHtml}
+  `;
+
+  // Sidebar
+  const sidebarNav = document.getElementById('sidebar-nav');
+  const sidebarTitle = document.getElementById('sidebar-title');
+  sidebarTitle.textContent = data.name;
+  sidebarNav.innerHTML = data.sections.map((s, i) =>
+    `<a href="#${s.id}" class="${i===0?'active':''}"><span class="section-dot"></span>${s.label}</a>`
+  ).join('');
+
+  document.getElementById('home-view').style.display = 'none';
+  document.getElementById('page-view').style.display = 'block';
+  document.getElementById('sidebar').classList.add('visible');
+
+  // Active tracking
+  setupScrollSpy(data.sections);
+  window.scrollTo(0, 0);
+}
+
+function toggleDropdown(id, btn) {
+  const dd = document.getElementById(id);
+  const isOpen = dd.classList.contains('open');
+  closeAllDropdowns();
+  if (!isOpen) {
+    dd.classList.add('open');
+    btn.classList.add('open');
+  }
+}
+
+function closeAllDropdowns() {
+  document.querySelectorAll('.nav-dropdown').forEach(d => d.classList.remove('open'));
+  document.querySelectorAll('.nav-group-btn').forEach(b => b.classList.remove('open'));
+}
+
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.nav-group')) closeAllDropdowns();
+});
+
+// ── SCROLL SPY ──────────────────────────────────────────
+function setupScrollSpy(sections) {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        document.querySelectorAll('.section-nav a, .sidebar-nav a').forEach(a => {
+          a.classList.toggle('active', a.getAttribute('href') === '#' + id);
+        });
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+
+  sections.forEach(s => {
+    const el = document.getElementById(s.id);
+    if (el) observer.observe(el);
+  });
+}
+</script>
+
+</body>
+</html>

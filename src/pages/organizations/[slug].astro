@@ -1,0 +1,19 @@
+---
+import { getCollection } from 'astro:content';
+import OrgLayout from '../../layouts/OrgLayout.astro';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('organizations');
+  return entries.map(entry => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content, headings } = await entry.render();
+---
+
+<OrgLayout entry={entry} headings={headings}>
+  <Content />
+</OrgLayout>

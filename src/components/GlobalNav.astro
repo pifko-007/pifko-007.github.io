@@ -1,0 +1,61 @@
+---
+import { getCollection } from 'astro:content';
+
+const countries = await getCollection('countries');
+const organizations = await getCollection('organizations');
+---
+
+<nav class="global-nav">
+  <a class="nav-brand" href="/">GeoAtlas <span>v0.1</span></a>
+  <div class="nav-sections">
+    <div class="nav-group">
+      <button class="nav-group-btn" data-dropdown="dd-countries">
+        Państwa <span class="arrow">▾</span>
+      </button>
+      <div class="nav-dropdown" id="dd-countries">
+        {countries.map(c => (
+          <a href={`/countries/${c.slug}`}>{c.data.flag} {c.data.name}</a>
+        ))}
+      </div>
+    </div>
+    <div class="nav-group">
+      <button class="nav-group-btn" data-dropdown="dd-orgs">
+        Organizacje <span class="arrow">▾</span>
+      </button>
+      <div class="nav-dropdown" id="dd-orgs">
+        {organizations.map(o => (
+          <a href={`/organizations/${o.slug}`}>{o.data.flag} {o.data.name}</a>
+        ))}
+      </div>
+    </div>
+  </div>
+</nav>
+
+<script>
+  function toggleDropdown(ddId: string, btn: HTMLElement) {
+    const dd = document.getElementById(ddId);
+    if (!dd) return;
+    const isOpen = dd.classList.contains('open');
+    closeAllDropdowns();
+    if (!isOpen) {
+      dd.classList.add('open');
+      btn.classList.add('open');
+    }
+  }
+
+  function closeAllDropdowns() {
+    document.querySelectorAll('.nav-dropdown').forEach(d => d.classList.remove('open'));
+    document.querySelectorAll('.nav-group-btn').forEach(b => b.classList.remove('open'));
+  }
+
+  document.querySelectorAll('.nav-group-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const ddId = (btn as HTMLElement).dataset.dropdown!;
+      toggleDropdown(ddId, btn as HTMLElement);
+    });
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!(e.target as Element).closest('.nav-group')) closeAllDropdowns();
+  });
+</script>
