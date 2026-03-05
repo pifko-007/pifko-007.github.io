@@ -10,6 +10,8 @@ const countries = defineCollection({
     population: z.string(),
     alliances: z.array(z.string()),
     tags: z.array(z.string()),
+    map: z.string().optional(),
+    map_credit: z.string().optional(),
   }),
 });
 

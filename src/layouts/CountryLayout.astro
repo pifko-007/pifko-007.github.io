@@ -9,7 +9,7 @@ interface Props {
 }
 
 const { entry, headings } = Astro.props;
-const { name, flag, capital, region, government, population, tags } = entry.data;
+const { name, flag, capital, region, government, population, tags, map, map_credit } = entry.data;
 const h2s = headings.filter(h => h.depth === 2);
 ---
 
@@ -44,6 +44,13 @@ const h2s = headings.filter(h => h.depth === 2);
           </div>
         </div>
       </div>
+
+      {map && (
+        <figure class="country-map">
+          <img src={map} alt={`Mapa — ${name}`} loading="lazy" />
+          {map_credit && <figcaption>{map_credit}</figcaption>}
+        </figure>
+      )}
 
       <SectionNav headings={headings} />
 

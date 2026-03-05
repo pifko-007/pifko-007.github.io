@@ -7,6 +7,8 @@ government: Republika parlamentarna
 population: 37,6 mln
 alliances: [NATO, EU, V4]
 tags: [NATO, EU, Flanka wschodnia]
+map: https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Poland_location_map.svg/800px-Poland_location_map.svg.png
+map_credit: "TUBS, CC BY-SA 3.0, via Wikimedia Commons"
 ---
 
 ## Przegląd
