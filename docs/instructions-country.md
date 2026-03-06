@@ -121,6 +121,7 @@ Od najbardziej do najmniej wiarygodnych:
 
 ### Czego unikać
 
+- **CIA World Factbook** — serwis jest niedostępny i nieaktualizowany; nie używaj jako źródła
 - Tabloidów i mediów o niskim standardzie dziennikarskim
 - Nieoznaczonych blogów i stron bez redakcji
 - Danych bez podanego roku
