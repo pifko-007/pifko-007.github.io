@@ -401,7 +401,7 @@ Odpowiada na pytanie: *czym to państwo jest strategicznie i dlaczego jest istot
 ## Formatowanie — zasady ogólne
 
 - **Nagłówki H2** (`##`) — główne sekcje, nie zmieniaj nazw (używane do generowania menu)
-- **Nagłówki H3** (`###`) — podsekcje, można dostosowywać
+- **Nagłówki H3** (`###`) — podsekcje, można dostosowywać; dopuszczalne jest dodanie dodatkowych H3 spoza szablonu, jeśli istnieje wyraźne merytoryczne uzasadnienie (np. odrębna instytucja o kluczowym znaczeniu, specyficzna struktura danego państwa). Każdą dodatkową sekcję należy opatrzyć krótkim kursywnym uzasadnieniem bezpośrednio pod nagłówkiem, np. `*Sekcja dodana ze względu na...*`
 - Dane liczbowe zawsze z rokiem: `PKB: 674 mld USD (2024)`
 - Separator dziesiętny: przecinek (`6,2%`, nie `6.2%`)
 - Wszystkie kwoty w USD — wyjątki tylko z uzasadnienia merytorycznego
