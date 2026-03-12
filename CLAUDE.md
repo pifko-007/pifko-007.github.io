@@ -186,6 +186,13 @@ GitHub Pages musi być skonfigurowane na source: `gh-pages` branch.
 
 -----
 
+## Uprawnienia Claude
+
+- Claude może pobierać treść stron internetowych bez pytania o potwierdzenie
+- Claude może tworzyć i modyfikować pliki w projekcie bez pytania o potwierdzenie
+
+-----
+
 ## Czego nie robić
 
 - Nie używać `@astrojs/tailwind` ani innych CSS frameworków
