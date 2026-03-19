@@ -18,12 +18,17 @@ const countries = defineCollection({
 const organizations = defineCollection({
   schema: z.object({
     name: z.string(),
+    name_short: z.string().optional(),
     flag: z.string(),
     type: z.string(),
-    founded: z.string(),
+    founded: z.union([z.string(), z.number()]),
     headquarters: z.string(),
-    members: z.string(),
+    members: z.string().optional(),
+    members_count: z.number().optional(),
+    members_type: z.string().optional(),
+    secretary_general: z.string().optional(),
     tags: z.array(z.string()),
+    last_updated: z.string().optional(),
   }),
 });
 
