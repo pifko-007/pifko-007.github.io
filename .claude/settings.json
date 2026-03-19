@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(*)",
+      "Read(/home/przemo/projects/geo/**)",
+      "Edit(/home/przemo/projects/geo/**)",
+      "Write(/home/przemo/projects/geo/**)",
+      "Bash(curl:*)"
+    ]
+  }
+}
