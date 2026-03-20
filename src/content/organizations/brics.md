@@ -4,7 +4,7 @@ name_short: BRICS
 flag: 🌐
 type: Organizacja polityczna
 founded: 2009
-headquarters: Rotacyjna (2025: Rio de Janeiro, Brazylia)
+headquarters: "Rotacyjna (2025: Rio de Janeiro, Brazylia)"
 members_count: 10
 members_type: państwa
 secretary_general: nie dotyczy
