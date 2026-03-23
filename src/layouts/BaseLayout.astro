@@ -700,17 +700,37 @@ const { title = 'GeoAtlas' } = Astro.props;
   }
 
   .mobile-section-label {
-    padding: 16px 24px 10px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
     font-family: 'IBM Plex Mono', monospace;
     font-size: 0.65rem;
     letter-spacing: 0.2em;
     text-transform: uppercase;
     color: var(--accent);
     background: var(--surface);
+    border: none;
     border-bottom: 1px solid var(--border);
+    cursor: pointer;
     position: sticky;
     top: 0;
+    z-index: 1;
   }
+
+  .mobile-section-label .arrow {
+    font-size: 0.6rem;
+    transition: transform 0.2s;
+  }
+
+  .mobile-section.open .mobile-section-label .arrow { transform: rotate(180deg); }
+
+  .mobile-section-body {
+    display: none;
+  }
+
+  .mobile-section.open .mobile-section-body { display: block; }
 
   .mobile-link {
     display: block;

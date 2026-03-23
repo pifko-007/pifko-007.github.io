@@ -40,17 +40,21 @@ const organizations = await getCollection('organizations');
     <button class="mobile-menu-close" id="mobile-menu-close">✕</button>
   </div>
   <div class="mobile-menu-body">
-    <div class="mobile-section">
-      <div class="mobile-section-label">Państwa</div>
-      {countries.map(c => (
-        <a href={`/countries/${c.slug}`} class="mobile-link">{c.data.flag} {c.data.name}</a>
-      ))}
+    <div class="mobile-section open">
+      <button class="mobile-section-label">Państwa <span class="arrow">▾</span></button>
+      <div class="mobile-section-body">
+        {countries.map(c => (
+          <a href={`/countries/${c.slug}`} class="mobile-link">{c.data.flag} {c.data.name}</a>
+        ))}
+      </div>
     </div>
-    <div class="mobile-section">
-      <div class="mobile-section-label">Organizacje</div>
-      {organizations.map(o => (
-        <a href={`/organizations/${o.slug}`} class="mobile-link">{o.data.flag} {o.data.name}</a>
-      ))}
+    <div class="mobile-section open">
+      <button class="mobile-section-label">Organizacje <span class="arrow">▾</span></button>
+      <div class="mobile-section-body">
+        {organizations.map(o => (
+          <a href={`/organizations/${o.slug}`} class="mobile-link">{o.data.flag} {o.data.name}</a>
+        ))}
+      </div>
     </div>
   </div>
 </div>
@@ -109,5 +113,12 @@ const organizations = await getCollection('organizations');
 
   mobileMenu?.querySelectorAll('.mobile-link').forEach(link => {
     link.addEventListener('click', closeMobileMenu);
+  });
+
+  // Mobile section collapse
+  mobileMenu?.querySelectorAll('.mobile-section-label').forEach(btn => {
+    btn.addEventListener('click', () => {
+      btn.closest('.mobile-section')?.classList.toggle('open');
+    });
   });
 </script>
