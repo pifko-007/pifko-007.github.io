@@ -29,9 +29,34 @@ const organizations = await getCollection('organizations');
       </div>
     </div>
   </div>
+  <button class="nav-hamburger" id="nav-hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 
+<div class="mobile-menu" id="mobile-menu">
+  <div class="mobile-menu-header">
+    <a class="nav-brand" href="/">GeoAtlas <span>v0.1</span></a>
+    <button class="mobile-menu-close" id="mobile-menu-close">✕</button>
+  </div>
+  <div class="mobile-menu-body">
+    <div class="mobile-section">
+      <div class="mobile-section-label">Państwa</div>
+      {countries.map(c => (
+        <a href={`/countries/${c.slug}`} class="mobile-link">{c.data.flag} {c.data.name}</a>
+      ))}
+    </div>
+    <div class="mobile-section">
+      <div class="mobile-section-label">Organizacje</div>
+      {organizations.map(o => (
+        <a href={`/organizations/${o.slug}`} class="mobile-link">{o.data.flag} {o.data.name}</a>
+      ))}
+    </div>
+  </div>
+</div>
+
 <script>
+  // Desktop dropdowns
   function toggleDropdown(ddId: string, btn: HTMLElement) {
     const dd = document.getElementById(ddId);
     if (!dd) return;
@@ -57,5 +82,32 @@ const organizations = await getCollection('organizations');
 
   document.addEventListener('click', (e) => {
     if (!(e.target as Element).closest('.nav-group')) closeAllDropdowns();
+  });
+
+  // Mobile menu
+  const hamburger = document.getElementById('nav-hamburger');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const closeBtn = document.getElementById('mobile-menu-close');
+
+  function openMobileMenu() {
+    mobileMenu?.classList.add('open');
+    hamburger?.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeMobileMenu() {
+    mobileMenu?.classList.remove('open');
+    hamburger?.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  hamburger?.addEventListener('click', () => {
+    mobileMenu?.classList.contains('open') ? closeMobileMenu() : openMobileMenu();
+  });
+
+  closeBtn?.addEventListener('click', closeMobileMenu);
+
+  mobileMenu?.querySelectorAll('.mobile-link').forEach(link => {
+    link.addEventListener('click', closeMobileMenu);
   });
 </script>

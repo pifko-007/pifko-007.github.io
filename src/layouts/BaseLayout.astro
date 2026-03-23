@@ -627,6 +627,104 @@ const { title = 'GeoAtlas' } = Astro.props;
 
   .back-btn:hover { color: var(--accent); border-color: var(--accent); }
 
+  /* ── HAMBURGER ───────────────────────────────── */
+  .nav-hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 56px;
+    height: 56px;
+    padding: 0 18px;
+    background: none;
+    border: none;
+    border-left: 1px solid var(--border);
+    cursor: pointer;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+
+  .nav-hamburger span {
+    display: block;
+    width: 20px;
+    height: 2px;
+    background: var(--text-dim);
+    transition: transform 0.2s, opacity 0.2s;
+  }
+
+  .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+  .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* ── MOBILE MENU ─────────────────────────────── */
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 99;
+    background: var(--bg);
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .mobile-menu.open { display: flex; }
+
+  .mobile-menu-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  .mobile-menu-close {
+    width: 56px;
+    height: 56px;
+    background: none;
+    border: none;
+    border-left: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .mobile-menu-body {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .mobile-section-label {
+    padding: 16px 24px 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+  }
+
+  .mobile-link {
+    display: block;
+    padding: 13px 24px;
+    color: var(--text-dim);
+    text-decoration: none;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 0.9rem;
+    border-bottom: 1px solid rgba(30, 35, 48, 0.5);
+    transition: color 0.15s, background 0.15s;
+  }
+
+  .mobile-link:hover { color: var(--text); background: rgba(255, 255, 255, 0.03); }
+
   /* SCROLLBAR */
   ::-webkit-scrollbar { width: 4px; height: 4px; }
   ::-webkit-scrollbar-track { background: var(--bg); }
@@ -644,6 +742,8 @@ const { title = 'GeoAtlas' } = Astro.props;
   }
 
   @media (max-width: 700px) {
+    .nav-sections { display: none; }
+    .nav-hamburger { display: flex; }
     .hero { padding: 48px 24px 36px; }
     .hero h1 { font-size: 2rem; }
     .cards-section { padding: 32px 24px; }
