@@ -199,6 +199,7 @@ Używaj jednego z poniższych typów. Jeśli organizacja nie pasuje do żadnego 
 - `Organizacja gospodarcza` — strefy handlowe, organizacje regulujące handel i gospodarkę (WTO, BRICS, ASEAN)
 - `Organizacja polityczna` — forum dyplomatyczne, organizacje bezpieczeństwa zbiorowego (ONZ, OBWE, G7, G20)
 - `Unia polityczno-gospodarcza` — organizacje łączące głęboką integrację polityczną i gospodarczą (UE)
+- `Unia związkowa` — dwustronna unia z aspiracjami do pełnej integracji państwowej (ZBIR); sekcja „Profil organizacji" zawiera podsekcje: **Model integracji związkowej**, **Asymetria strukturalna**, **Wymiar militarny** (jeśli dotyczy)
 
 Przykład:
 ```yaml
