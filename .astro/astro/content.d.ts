@@ -141,6 +141,55 @@ declare module 'astro:content' {
 
 	type ContentEntryMap = {
 		"countries": {
+"belarus.md": {
+	id: "belarus.md";
+  slug: "belarus";
+  body: string;
+  collection: "countries";
+  data: InferEntrySchema<"countries">
+} & { render(): Render[".md"] };
+"china.md": {
+	id: "china.md";
+  slug: "china";
+  body: string;
+  collection: "countries";
+  data: InferEntrySchema<"countries">
+} & { render(): Render[".md"] };
+"czech-republic.md": {
+	id: "czech-republic.md";
+  slug: "czech-republic";
+  body: string;
+  collection: "countries";
+  data: InferEntrySchema<"countries">
+} & { render(): Render[".md"] };
+"france.md": {
+	id: "france.md";
+  slug: "france";
+  body: string;
+  collection: "countries";
+  data: InferEntrySchema<"countries">
+} & { render(): Render[".md"] };
+"germany.md": {
+	id: "germany.md";
+  slug: "germany";
+  body: string;
+  collection: "countries";
+  data: InferEntrySchema<"countries">
+} & { render(): Render[".md"] };
+"iran.md": {
+	id: "iran.md";
+  slug: "iran";
+  body: string;
+  collection: "countries";
+  data: InferEntrySchema<"countries">
+} & { render(): Render[".md"] };
+"lithuania.md": {
+	id: "lithuania.md";
+  slug: "lithuania";
+  body: string;
+  collection: "countries";
+  data: InferEntrySchema<"countries">
+} & { render(): Render[".md"] };
 "poland.md": {
 	id: "poland.md";
   slug: "poland";
@@ -148,11 +197,130 @@ declare module 'astro:content' {
   collection: "countries";
   data: InferEntrySchema<"countries">
 } & { render(): Render[".md"] };
+"russia.md": {
+	id: "russia.md";
+  slug: "russia";
+  body: string;
+  collection: "countries";
+  data: InferEntrySchema<"countries">
+} & { render(): Render[".md"] };
+"slovakia.md": {
+	id: "slovakia.md";
+  slug: "slovakia";
+  body: string;
+  collection: "countries";
+  data: InferEntrySchema<"countries">
+} & { render(): Render[".md"] };
+"ukraine.md": {
+	id: "ukraine.md";
+  slug: "ukraine";
+  body: string;
+  collection: "countries";
+  data: InferEntrySchema<"countries">
+} & { render(): Render[".md"] };
+"united-kingdom.md": {
+	id: "united-kingdom.md";
+  slug: "united-kingdom";
+  body: string;
+  collection: "countries";
+  data: InferEntrySchema<"countries">
+} & { render(): Render[".md"] };
+"usa.md": {
+	id: "usa.md";
+  slug: "usa";
+  body: string;
+  collection: "countries";
+  data: InferEntrySchema<"countries">
+} & { render(): Render[".md"] };
 };
 "organizations": {
+"brics.md": {
+	id: "brics.md";
+  slug: "brics";
+  body: string;
+  collection: "organizations";
+  data: InferEntrySchema<"organizations">
+} & { render(): Render[".md"] };
+"eug.md": {
+	id: "eug.md";
+  slug: "eug";
+  body: string;
+  collection: "organizations";
+  data: InferEntrySchema<"organizations">
+} & { render(): Render[".md"] };
+"g20.md": {
+	id: "g20.md";
+  slug: "g20";
+  body: string;
+  collection: "organizations";
+  data: InferEntrySchema<"organizations">
+} & { render(): Render[".md"] };
+"g7.md": {
+	id: "g7.md";
+  slug: "g7";
+  body: string;
+  collection: "organizations";
+  data: InferEntrySchema<"organizations">
+} & { render(): Render[".md"] };
+"hamas.md": {
+	id: "hamas.md";
+  slug: "hamas";
+  body: string;
+  collection: "organizations";
+  data: InferEntrySchema<"organizations">
+} & { render(): Render[".md"] };
+"hezbollah.md": {
+	id: "hezbollah.md";
+  slug: "hezbollah";
+  body: string;
+  collection: "organizations";
+  data: InferEntrySchema<"organizations">
+} & { render(): Render[".md"] };
 "nato.md": {
 	id: "nato.md";
   slug: "nato";
+  body: string;
+  collection: "organizations";
+  data: InferEntrySchema<"organizations">
+} & { render(): Render[".md"] };
+"onz.md": {
+	id: "onz.md";
+  slug: "onz";
+  body: string;
+  collection: "organizations";
+  data: InferEntrySchema<"organizations">
+} & { render(): Render[".md"] };
+"oubz.md": {
+	id: "oubz.md";
+  slug: "oubz";
+  body: string;
+  collection: "organizations";
+  data: InferEntrySchema<"organizations">
+} & { render(): Render[".md"] };
+"sco.md": {
+	id: "sco.md";
+  slug: "sco";
+  body: string;
+  collection: "organizations";
+  data: InferEntrySchema<"organizations">
+} & { render(): Render[".md"] };
+"ue.md": {
+	id: "ue.md";
+  slug: "ue";
+  body: string;
+  collection: "organizations";
+  data: InferEntrySchema<"organizations">
+} & { render(): Render[".md"] };
+"wnp.md": {
+	id: "wnp.md";
+  slug: "wnp";
+  body: string;
+  collection: "organizations";
+  data: InferEntrySchema<"organizations">
+} & { render(): Render[".md"] };
+"zbir.md": {
+	id: "zbir.md";
+  slug: "zbir";
   body: string;
   collection: "organizations";
   data: InferEntrySchema<"organizations">

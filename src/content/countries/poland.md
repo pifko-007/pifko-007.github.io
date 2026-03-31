@@ -18,7 +18,7 @@ last_updated: 2026-03
 
 Polska jest państwem w Europie Środkowej, graniczącym z Niemcami, Czechami, Słowacją, Ukrainą, Białorusią, Litwą oraz Rosją (obwód kaliningradzki), co czyni ją jednym z kluczowych państw wschodniej flanki NATO. Członkostwo w Sojuszu Północnoatlantyckim (od 1999) i Unii Europejskiej (od 2004) stanowi fundament polityki bezpieczeństwa i zagranicznej kraju. Pełnoskalowa agresja Rosji na Ukrainę w 2022 roku zasadniczo zmieniła krajobraz strategiczny regionu — Polska zareagowała gwałtownym wzrostem wydatków obronnych (powyżej 4% PKB) oraz przyjęciem kilku milionów osób uciekających z Ukrainy od 2022 roku, z czego około 1 mln nadal przebywa w Polsce. Polska jest szóstą co do wielkości gospodarką UE, z PKB przekraczającym 914 mld USD (2024), i pozostaje ważnym węzłem logistycznym oraz produkcyjnym w Europie Środkowej. Wewnętrznie kraj przechodzi przez okres napięć politycznych związanych z odbudową praworządności po rządach Prawa i Sprawiedliwości (2015–2023).
 
-> **Źródła:** [CIA World Factbook — Poland](https://www.cia.gov/the-world-factbook/countries/poland/) (2024), [Eurostat](https://ec.europa.eu/eurostat) (2024)
+> **Źródła:** [Eurostat](https://ec.europa.eu/eurostat) (2024), [World Bank Open Data — Poland](https://data.worldbank.org/country/poland) (2024)
 
 ## Polityka wewnętrzna
 
@@ -70,9 +70,9 @@ Prezydent wybierany jest w wyborach powszechnych na pięcioletnią kadencję (z 
 
 ### Wskaźniki makroekonomiczne
 
-- **PKB nominalny:** 914 mld USD (2024), co czyni Polskę szóstą co do wielkości gospodarką UE
+- **PKB nominalny:** 914 mld USD (2024, World Bank); w 2025 roku Polska przekroczyła próg 1 bln USD, wchodząc do dwudziestki największych gospodarek świata — szósta co do wielkości gospodarka UE
 - **PKB per capita (PPP):** 50 378 USD (2024, World Bank)
-- **Wzrost PKB:** 3,0% (2024); 3,3% (2025, IMF Article IV)
+- **Wzrost PKB:** 2,9% (2024, GUS); 3,6% (2025, IMF WEO październik 2025)
 - **Inflacja:** 3,6% średniorocznie (2024); inflacja bazowa 4,3% (2024, IMF Article IV)
 - **Bezrobocie:** 2,9% (2024, World Bank) — jedno z najniższych w UE
 - **Dług publiczny:** 55,1% PKB (2024); prognoza na 2025: 59,3% PKB (IMF Article IV)
@@ -144,7 +144,7 @@ Polskie Siły Zbrojne składają się z pięciu rodzajów: **Wojska Lądowe**, *
 
 ### Budżet i wydatki obronne
 
-- **2024:** 38,0 mld USD — **4,12% PKB** (SIPRI); najwyższy odsetek PKB wśród państw NATO
+- **2024:** 38,0 mld USD — **4,2% PKB** (SIPRI); najwyższy odsetek PKB wśród państw NATO
 - **2025:** ok. 45 mld USD / 186,6 mld PLN — **~4,7% PKB** (budżet zatwierdzony)
 - **2026 (plan):** ~4,8% PKB
 - **Trend 2019–2025:** dynamiczny wzrost z ~2% do ponad 4% PKB, napędzany pełnoskalową agresją Rosji na Ukrainę w 2022 roku
