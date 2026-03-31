@@ -30,7 +30,7 @@ const organizations = defineCollection({
     members_type: z.string().optional(),
     secretary_general: z.string().optional(),
     designation_un: z.enum(['tak', 'nie', 'częściowa']).optional(),
-    designation_eu: z.enum(['tak', 'nie']).optional(),
+    designation_eu: z.enum(['tak', 'nie', 'częściowa']).optional(),
     designation_us: z.enum(['tak', 'nie']).optional(),
     tags: z.array(z.string()),
     last_updated: z.string().optional(),
