@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import OrgLayout from '../../layouts/OrgLayout.astro';
+import TerrorOrgLayout from '../../layouts/TerrorOrgLayout.astro';
 
 export async function getStaticPaths() {
   const entries = await getCollection('organizations');
@@ -12,8 +13,15 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 const { Content, headings } = await entry.render();
+const isTerror = entry.data.type === 'Organizacja terrorystyczna';
 ---
 
-<OrgLayout entry={entry} headings={headings}>
-  <Content />
-</OrgLayout>
+{isTerror ? (
+  <TerrorOrgLayout entry={entry} headings={headings}>
+    <Content />
+  </TerrorOrgLayout>
+) : (
+  <OrgLayout entry={entry} headings={headings}>
+    <Content />
+  </OrgLayout>
+)}

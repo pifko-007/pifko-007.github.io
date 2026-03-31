@@ -4,7 +4,9 @@ import Card from '../components/Card.astro';
 import { getCollection } from 'astro:content';
 
 const countries = await getCollection('countries');
-const organizations = await getCollection('organizations');
+const allOrgs = await getCollection('organizations');
+const organizations = allOrgs.filter(o => o.data.type !== 'Organizacja terrorystyczna');
+const terrorOrgs = allOrgs.filter(o => o.data.type === 'Organizacja terrorystyczna');
 ---
 
 <BaseLayout title="Baza wiedzy geopolitycznej">
@@ -24,6 +26,12 @@ const organizations = await getCollection('organizations');
         <div class="stat-number">{organizations.length}</div>
         <div class="stat-label">Organizacje</div>
       </div>
+      {terrorOrgs.length > 0 && (
+        <div class="stat">
+          <div class="stat-number">{terrorOrgs.length}</div>
+          <div class="stat-label">Org. terrorystyczne</div>
+        </div>
+      )}
       <div class="stat">
         <div class="stat-number">—</div>
         <div class="stat-label">Ostatnia aktualizacja</div>
@@ -53,11 +61,29 @@ const organizations = await getCollection('organizations');
             href={`/organizations/${o.slug}`}
             flag={o.data.flag}
             name={o.data.name}
-            meta={`${o.data.type} · ${o.data.members}`}
+            meta={`${o.data.type}${o.data.members ? ' · ' + o.data.members : ''}`}
             tags={o.data.tags}
           />
         ))}
       </div>
+
+      {terrorOrgs.length > 0 && (
+        <>
+          <div class="section-title terror">Organizacje Terrorystyczne</div>
+          <div class="cards-grid">
+            {terrorOrgs.map(o => (
+              <Card
+                type="terror"
+                href={`/organizations/${o.slug}`}
+                flag={o.data.flag}
+                name={o.data.name}
+                meta={`${o.data.subtype ?? o.data.type}${o.data.active_regions && o.data.active_regions.length > 0 ? ' · ' + o.data.active_regions[0] : ''}`}
+                tags={o.data.tags}
+              />
+            ))}
+          </div>
+        </>
+      )}
     </div>
   </div>
 </BaseLayout>

@@ -2,7 +2,9 @@
 import { getCollection } from 'astro:content';
 
 const countries = await getCollection('countries');
-const organizations = await getCollection('organizations');
+const allOrgs = await getCollection('organizations');
+const organizations = allOrgs.filter(o => o.data.type !== 'Organizacja terrorystyczna');
+const terrorOrgs = allOrgs.filter(o => o.data.type === 'Organizacja terrorystyczna');
 ---
 
 <nav class="global-nav">
@@ -28,6 +30,18 @@ const organizations = await getCollection('organizations');
         ))}
       </div>
     </div>
+    {terrorOrgs.length > 0 && (
+      <div class="nav-group">
+        <button class="nav-group-btn terror" data-dropdown="dd-terror">
+          Terroryzm <span class="arrow">▾</span>
+        </button>
+        <div class="nav-dropdown" id="dd-terror">
+          {terrorOrgs.map(o => (
+            <a href={`/organizations/${o.slug}`}>{o.data.flag} {o.data.name}</a>
+          ))}
+        </div>
+      </div>
+    )}
   </div>
   <button class="nav-hamburger" id="nav-hamburger" aria-label="Menu">
     <span></span><span></span><span></span>
@@ -56,6 +70,16 @@ const organizations = await getCollection('organizations');
         ))}
       </div>
     </div>
+    {terrorOrgs.length > 0 && (
+      <div class="mobile-section">
+        <button class="mobile-section-label terror">Terroryzm <span class="arrow">▾</span></button>
+        <div class="mobile-section-body">
+          {terrorOrgs.map(o => (
+            <a href={`/organizations/${o.slug}`} class="mobile-link">{o.data.flag} {o.data.name}</a>
+          ))}
+        </div>
+      </div>
+    )}
   </div>
 </div>
 

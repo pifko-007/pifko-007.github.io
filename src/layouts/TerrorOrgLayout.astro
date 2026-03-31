@@ -1,0 +1,93 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import SectionNav from '../components/SectionNav.astro';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  entry: CollectionEntry<'organizations'>;
+  headings: { depth: number; slug: string; text: string }[];
+}
+
+const { entry, headings } = Astro.props;
+const { name, flag, type, subtype, founded, headquarters, active_regions, designation_un, designation_eu, designation_us, tags } = entry.data;
+const h2s = headings.filter(h => h.depth === 2);
+---
+
+<BaseLayout title={name}>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="sidebar-header">{name}</div>
+      <nav class="sidebar-nav">
+        {h2s.map((h, i) => (
+          <a href={`#${h.slug}`} class={i === 0 ? 'active' : ''}>
+            <span class="section-dot"></span>{h.text}
+          </a>
+        ))}
+      </nav>
+    </aside>
+
+    <main class="content">
+      <a class="back-btn" href="/">← Powrót do listy</a>
+
+      <div class="page-header">
+        <div class="breadcrumb">
+          <a href="/">GeoAtlas</a> / <a href="/">Organizacje terrorystyczne</a> / {name}
+        </div>
+        <h1>{flag} {name}</h1>
+        <div class="page-header-meta">
+          <div class="meta-item"><span>Typ:</span><strong>{type}</strong></div>
+          {subtype && <div class="meta-item"><span>Podtyp:</span><strong>{subtype}</strong></div>}
+          <div class="meta-item"><span>Założona:</span><strong>{founded}</strong></div>
+          <div class="meta-item"><span>Baza:</span><strong>{headquarters}</strong></div>
+          {active_regions && active_regions.length > 0 && (
+            <div class="meta-item"><span>Regiony:</span><strong>{active_regions.join(', ')}</strong></div>
+          )}
+          <div class="designations">
+            <span class={`designation ${designation_un === 'tak' ? 'active' : ''}`}>ONZ</span>
+            <span class={`designation ${designation_eu === 'tak' ? 'active' : ''}`}>UE</span>
+            <span class={`designation ${designation_us === 'tak' ? 'active' : ''}`}>USA</span>
+          </div>
+          <div class="card-tags">
+            {tags.map(tag => <span class="tag terror">{tag}</span>)}
+          </div>
+        </div>
+      </div>
+
+      <SectionNav headings={headings} />
+
+      <div class="entry-content entry-section-end">
+        <slot />
+      </div>
+    </main>
+  </div>
+</BaseLayout>
+
+<style is:global>
+  .page-header .tag.terror { background: var(--terror-tag); color: var(--terror-accent); }
+  .section-nav a.active { border-bottom-color: var(--terror-accent); color: var(--terror-accent); }
+  .sidebar-nav a.active { color: var(--terror-accent); background: rgba(156,58,58,0.07); border-left-color: var(--terror-accent); }
+  .sidebar-nav a.active .section-dot { background: var(--terror-accent); }
+
+  .designations {
+    display: flex;
+    gap: 6px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+  }
+
+  .designation {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 3px;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    background: var(--surface);
+  }
+
+  .designation.active {
+    border-color: var(--terror-accent);
+    color: var(--terror-accent);
+    background: var(--terror-tag);
+  }
+</style>

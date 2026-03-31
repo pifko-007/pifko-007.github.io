@@ -39,6 +39,8 @@ const { title = 'GeoAtlas' } = Astro.props;
     --country-accent: #4a8c5c;
     --org-tag: #1a1a2e;
     --org-accent: #4a5a9c;
+    --terror-tag: #2a1212;
+    --terror-accent: #9c3a3a;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -364,6 +366,7 @@ const { title = 'GeoAtlas' } = Astro.props;
 
   .card-type.country { color: var(--country-accent); }
   .card-type.org { color: var(--org-accent); }
+  .card-type.terror { color: var(--terror-accent); }
 
   .card h3 {
     font-family: 'Playfair Display', serif;
@@ -394,6 +397,17 @@ const { title = 'GeoAtlas' } = Astro.props;
 
   .tag.country { background: var(--country-tag); color: var(--country-accent); }
   .tag.org { background: var(--org-tag); color: var(--org-accent); }
+  .tag.terror { background: var(--terror-tag); color: var(--terror-accent); }
+
+  .section-title.terror { color: var(--terror-accent); }
+
+  .nav-group-btn.terror:hover,
+  .nav-group-btn.terror.open {
+    color: var(--terror-accent);
+    background: rgba(156, 58, 58, 0.05);
+  }
+
+  .mobile-section-label.terror { color: var(--terror-accent); }
 
   .card-arrow {
     position: absolute;

@@ -1,6 +1,6 @@
 ---
 interface Props {
-  type: 'country' | 'org';
+  type: 'country' | 'org' | 'terror';
   href: string;
   flag: string;
   name: string;
@@ -9,7 +9,7 @@ interface Props {
 }
 
 const { type, href, flag, name, meta, tags } = Astro.props;
-const typeLabel = type === 'country' ? '// Państwo' : '// Organizacja';
+const typeLabel = type === 'country' ? '// Państwo' : type === 'terror' ? '// Org. Terrorystyczna' : '// Organizacja';
 ---
 
 <a class="card" href={href}>
