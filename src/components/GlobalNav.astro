@@ -5,6 +5,7 @@ const countries = await getCollection('countries');
 const allOrgs = await getCollection('organizations');
 const organizations = allOrgs.filter(o => o.data.type !== 'Organizacja terrorystyczna');
 const terrorOrgs = allOrgs.filter(o => o.data.type === 'Organizacja terrorystyczna');
+const conflicts = await getCollection('conflicts');
 ---
 
 <nav class="global-nav">
@@ -42,6 +43,23 @@ const terrorOrgs = allOrgs.filter(o => o.data.type === 'Organizacja terrorystycz
         </div>
       </div>
     )}
+    {conflicts.length > 0 && (
+      <div class="nav-group">
+        <button class="nav-group-btn conflict" data-dropdown="dd-conflicts">
+          Konflikty <span class="arrow">▾</span>
+        </button>
+        <div class="nav-dropdown" id="dd-conflicts">
+          {conflicts.map(c => (
+            <a href={`/conflicts/${c.slug}`}>{c.data.flag} {c.data.name}</a>
+          ))}
+        </div>
+      </div>
+    )}
+  </div>
+  <div class="font-controls" aria-label="Rozmiar czcionki">
+    <button class="font-btn" data-size="" aria-label="Normalny rozmiar">A</button>
+    <button class="font-btn" data-size="lg" aria-label="Duży rozmiar">A</button>
+    <button class="font-btn" data-size="xl" aria-label="Bardzo duży rozmiar">A</button>
   </div>
   <button class="nav-hamburger" id="nav-hamburger" aria-label="Menu">
     <span></span><span></span><span></span>
@@ -76,6 +94,16 @@ const terrorOrgs = allOrgs.filter(o => o.data.type === 'Organizacja terrorystycz
         <div class="mobile-section-body">
           {terrorOrgs.map(o => (
             <a href={`/organizations/${o.slug}`} class="mobile-link">{o.data.flag} {o.data.name}</a>
+          ))}
+        </div>
+      </div>
+    )}
+    {conflicts.length > 0 && (
+      <div class="mobile-section">
+        <button class="mobile-section-label conflict">Konflikty <span class="arrow">▾</span></button>
+        <div class="mobile-section-body">
+          {conflicts.map(c => (
+            <a href={`/conflicts/${c.slug}`} class="mobile-link">{c.data.flag} {c.data.name}</a>
           ))}
         </div>
       </div>
@@ -144,5 +172,23 @@ const terrorOrgs = allOrgs.filter(o => o.data.type === 'Organizacja terrorystycz
     btn.addEventListener('click', () => {
       btn.closest('.mobile-section')?.classList.toggle('open');
     });
+  });
+
+  // Font size
+  const FONT_KEY = 'geo-fontsize';
+  function applyFontSize(size: string) {
+    if (size) document.documentElement.setAttribute('data-fontsize', size);
+    else document.documentElement.removeAttribute('data-fontsize');
+    localStorage.setItem(FONT_KEY, size);
+    document.querySelectorAll('.font-btn').forEach(btn => {
+      btn.classList.toggle('active', (btn as HTMLElement).dataset.size === size);
+    });
+  }
+
+  const savedSize = localStorage.getItem(FONT_KEY) ?? '';
+  applyFontSize(savedSize);
+
+  document.querySelectorAll('.font-btn').forEach(btn => {
+    btn.addEventListener('click', () => applyFontSize((btn as HTMLElement).dataset.size ?? ''));
   });
 </script>
